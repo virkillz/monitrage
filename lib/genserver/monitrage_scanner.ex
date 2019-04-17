@@ -156,8 +156,9 @@ defmodule Monitrage.Scanner do
         :nothing
     end
 
+    idle = Application.get_env(:monitrage, :sleep_between_pair, 1000)
     # wait one second to avoid throttle
-    :timer.sleep(1000)
+    :timer.sleep(idle)
     execute_loop(t)
   end
 

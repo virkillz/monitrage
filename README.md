@@ -1,5 +1,13 @@
 # Monitrage
 
+## What is this?
+
+Monitrage (stands for Monitor Arbitrage) is an Elixir library to scan multiple cryptocurrency exchanges for price differences for potential market arbitrage. Utilizing natural concurrency in elixir, we can gather bids and asks from each exchange's orderbook in parallel to calculate potential profit by buying from one exchange and sell it to another.
+
+## How it worked?
+Every one hour we will get the supported pair from each of exchanges. We shortlisted to get pair which supported by 2 or more exchanges. 
+
+In another process, we cycle those pairs, each time we fetch order book from all supported exchange and calculate whether there are potential profitable transaction by finding the best offer (minimum ask and maximum bid). When we found it we will broadcast to another interested process (see installation & usage to learn how to subscribe). We put 1 second sleep between pair to avoid rate limit imposed by exchanges. This behaviour can be modified through config.
 
 
 ## Exchange Support
@@ -117,7 +125,14 @@ When we found a potential arbitrage, the result comes in following map structure
 
 ```
 
+#### Additional config
 
+If you want to speed up the cycle between pairs, you can redusce the time between pair scan. The default is 1000 (1 second), you can make it faster by decrease the gap. But please remember it might pass rate limit throttle by some exchange. Generally 3 request per second is considered conservative, so put 300 to 400 is usually safe. To do that, put this config in your `config.exs` file.
+
+```
+ config :monitrage,
+   sleep_between_pair: 1000
+```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
