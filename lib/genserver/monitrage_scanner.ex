@@ -199,7 +199,7 @@ defmodule Monitrage.Scanner do
     |> Enum.group_by(& &1)
     |> Enum.filter(fn {_x, y} -> length(y) > 1 end)
     |> Enum.map(fn {x, _y} -> x end)
-    |> Enum.filter(fn x -> Enum.member(blacklist, x) != true end)    
+    |> Enum.filter(fn x -> Enum.member?(blacklist, x) != true end)    
   end
 
   # def count_member(symbol, list) do
