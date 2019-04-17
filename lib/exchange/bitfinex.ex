@@ -58,7 +58,7 @@ defmodule Monitrage.Bitfinex do
   def depth(symbol) do
     case HTTPoison.get(@domain <> "/v1/book/#{symbol}") do
       {:ok, %{body: body, status_code: 200}} -> Jason.decode(body)
-      err -> err
+      err -> {:error, "Cannot get depth"}
     end
   end
 
@@ -73,8 +73,7 @@ defmodule Monitrage.Bitfinex do
           lowest_ask: [lowest_ask["price"], lowest_ask["amount"]]
         }
 
-      err ->
-        err
+      err -> %{higest_bid: 0, lowest_ask: nil}
     end
   end
 end

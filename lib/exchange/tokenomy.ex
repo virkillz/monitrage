@@ -34,7 +34,7 @@ defmodule Monitrage.Tokenomy do
   def depth(symbol) do
     case HTTPoison.get(@domain <> "/api/#{symbol}/depth") do
       {:ok, %{body: body, status_code: 200}} -> Jason.decode(body)
-      err -> err
+      err -> {:error, "Cannot get depth"}
     end
   end
 
@@ -49,8 +49,7 @@ defmodule Monitrage.Tokenomy do
         lowest_ask = List.first(asks)
         %{higest_bid: higest_bid, lowest_ask: lowest_ask}
 
-      err ->
-        err
+      err -> %{higest_bid: 0, lowest_ask: nil}
     end
   end
 end

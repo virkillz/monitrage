@@ -55,8 +55,9 @@ defmodule Monitrage.Binance do
           _else -> {:error, "Bad request"}
         end
 
-      err ->
-        err
+      {:ok, %{body: body, status_code: other_code}} -> {:error, "Got #{other_code} error."}
+
+      err -> {:error, "unexpected error"}
     end
   end
 
@@ -67,8 +68,7 @@ defmodule Monitrage.Binance do
         lowest_ask = List.first(asks)
         %{higest_bid: higest_bid, lowest_ask: lowest_ask}
 
-      err ->
-        err
+      err -> %{higest_bid: 0, lowest_ask: nil}
     end
   end
 
