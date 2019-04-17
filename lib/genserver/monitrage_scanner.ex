@@ -90,6 +90,8 @@ defmodule Monitrage.Scanner do
 
     profit = sell_price - buy_price
 
+    gain = Float.round((profit/buy_price) * 100)
+
     list_price = reformat_list_price(list_price)
 
     result = %{
@@ -100,8 +102,10 @@ defmodule Monitrage.Scanner do
       profit: raw_to_float_string(profit),
       all_prices: list_price,
       pair: symbol,
+      gain: Float.to_string(gain),
       base: String.upcase(base),
-      asset: String.upcase(asset)
+      asset: String.upcase(asset),
+      time: :os.system_time(:millisecond)
     }
 
     if profit > 0 do
