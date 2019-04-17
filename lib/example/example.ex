@@ -1,4 +1,4 @@
-defmodule Monitrage.SubscriberExample do
+defmodule YourApp.Whatever do
   @moduledoc "This is the genserver example when you want to subscribe into arbitrage signal."
   use GenServer
 

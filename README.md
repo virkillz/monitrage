@@ -41,7 +41,7 @@ Now you can subscribe to the signal. We use `Registry` standard library for inte
 
 ```elixir
 
-defmodule Monitrage.SubscriberExample do
+defmodule YourApp.Whatever do
   @moduledoc "This is the genserver example when you want to subscribe into arbitrage signal."
   use GenServer
 
