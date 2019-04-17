@@ -7,6 +7,9 @@ defmodule Monitrage do
 
   """
 
+  @blacklisted_pair ["hot_btc", "hot_eth", "dat_eth"]
+
+
   @supported_exchange [
     binance: Monitrage.Binance,
     bitfinex: Monitrage.Bitfinex,
@@ -22,6 +25,10 @@ defmodule Monitrage do
   def supported_exchange do
     @supported_exchange
   end
+
+  def blacklist do
+    @blacklisted_pair
+  end  
 
   def get_link(exchange, symbol) when is_atom(exchange) do
     if Keyword.has_key?(@supported_exchange, exchange) do

@@ -193,11 +193,13 @@ defmodule Monitrage.Scanner do
   # at least supported by 2 or more exchange
   defp list_prime_market do
     all_pairs = list_all_pairs_duplicate()
+    blacklist = Monitrage.blacklist()
 
     all_pairs
     |> Enum.group_by(& &1)
     |> Enum.filter(fn {_x, y} -> length(y) > 1 end)
     |> Enum.map(fn {x, _y} -> x end)
+    |> Enum.filter(fn x -> Enum.member(blacklist, x) != true end)    
   end
 
   # def count_member(symbol, list) do
