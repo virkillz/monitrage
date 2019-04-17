@@ -5,19 +5,6 @@ defmodule Monitrage.Kucoin do
 
   @domain "https://openapi-v2.kucoin.com"
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Monitrage.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
-
   def fetch_available_coins do
     case HTTPoison.get(@domain <> "/api/v1/symbols") do
       {:ok, %{body: body, status_code: 200}} ->
@@ -41,7 +28,6 @@ defmodule Monitrage.Kucoin do
     [asset, base] = monitrage_symbol |> String.split("_")
 
     "https://www.kucoin.com/trade/" <> String.upcase(asset) <> "-" <> String.upcase(base)
-
   end
 
   def list_available_coins do

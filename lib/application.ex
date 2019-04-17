@@ -7,7 +7,8 @@ defmodule Monitrage.Application do
     # import Supervisor.Spec
 
     children = [
-      {Monitrage.start_link, []}
+      # {Registry, keys: :duplicate, name: :monitrage_registry},
+      {Monitrage.Scanner, []}
     ]
 
     opts = [strategy: :one_for_one, name: Monitrage.Supervisor]

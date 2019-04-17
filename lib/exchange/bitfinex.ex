@@ -7,19 +7,6 @@ defmodule Monitrage.Bitfinex do
 
   # btcusd symbol
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Monitrage.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
-
   def fetch_available_coins do
     case HTTPoison.get(@domain <> "/v1/symbols") do
       {:ok, %{body: body, status_code: 200}} ->
@@ -45,9 +32,7 @@ defmodule Monitrage.Bitfinex do
     [asset, base] = monitrage_symbol |> String.split("_")
 
     "https://www.bitfinex.com/t/" <> String.upcase(asset) <> ":" <> String.upcase(base)
-
   end
-
 
   def list_available_coins do
     case fetch_available_coins() do

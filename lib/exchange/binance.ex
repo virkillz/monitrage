@@ -10,12 +10,6 @@ defmodule Monitrage.Binance do
 
   @doc """
   Hello world.
-
-  ## Examples
-
-      iex> Monitrage.hello()
-      :world
-
   """
   @impl Monitrage.Exchange
   def fetch_available_coins do
@@ -41,7 +35,6 @@ defmodule Monitrage.Binance do
     [asset, base] = monitrage_symbol |> String.split("_")
 
     "https://www.binance.com/en/trade/" <> String.upcase(asset) <> "_" <> String.upcase(base)
-
   end
 
   def list_available_coins do
@@ -53,13 +46,22 @@ defmodule Monitrage.Binance do
 
   def depth(symbol) do
     case HTTPoison.get(@domain <> "/api/v1/depth?symbol=" <> symbol) do
-      {:ok, %{body: body, status_code: 200}} -> Jason.decode(body)
-      err -> err
+      {:ok, %{body: body, status_code: 200}} ->
+        Jason.decode(body)
+
+      {:ok, %{body: body, status_code: 400}} ->
+        case Jason.decode(body) do
+          {:ok, %{"msg" => msg}} -> {:error, msg}
+          _else -> {:error, "Bad request"}
+        end
+
+      err ->
+        err
     end
   end
 
-  def best_offer(symbol) do
-    case depth(symbol |> decode_symbol) do
+  def best_offer(monitrage_symbol) do
+    case depth(monitrage_symbol |> decode_symbol) do
       {:ok, %{"asks" => asks, "bids" => bids}} ->
         higest_bid = List.first(bids)
         lowest_ask = List.first(asks)
@@ -70,7 +72,10 @@ defmodule Monitrage.Binance do
     end
   end
 
-  defp decode_symbol(monitrage_symbol) do
+  @doc """
+  Turn Monitrage standard symbol into Binance standard symbol from bnb_eth to BNBETH
+  """
+  def decode_symbol(monitrage_symbol) do
     [base, quoted] = String.split(monitrage_symbol, "_")
     String.upcase(base) <> String.upcase(quoted)
   end

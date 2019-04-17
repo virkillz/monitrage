@@ -5,19 +5,6 @@ defmodule Monitrage.Tokenomy do
 
   @domain "https://exchange.tokenomy.com"
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Monitrage.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
-
   def fetch_available_coins do
     case HTTPoison.get(@domain <> "/api/summaries") do
       {:ok, %{body: body, status_code: 200}} ->
@@ -31,14 +18,11 @@ defmodule Monitrage.Tokenomy do
     end
   end
 
-
   def get_link_symbol(monitrage_symbol) do
     [asset, base] = monitrage_symbol |> String.split("_")
 
     "https://exchange.tokenomy.com/market/" <> String.upcase(asset) <> String.upcase(base)
-
   end
-
 
   def list_available_coins do
     case fetch_available_coins() do
