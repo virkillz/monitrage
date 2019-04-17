@@ -24,7 +24,7 @@ defmodule Monitrage.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      # mod: {Monitrage.Application, []},
+      mod: {Monitrage.Application, []},
       extra_applications: [:logger]
     ]
   end

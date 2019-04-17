@@ -75,6 +75,8 @@ defmodule Monitrage.Scanner do
   def analyze_best_prices(symbol) do
     list_price = fetch_best_prices(symbol)
 
+    [asset, base] = String.split(symbol, "_")
+
     highest_bid =
       list_price
       |> Enum.map(fn {k, v} -> {k, float_string_to_raw(v.higest_bid)} end)
@@ -88,13 +90,18 @@ defmodule Monitrage.Scanner do
 
     profit = sell_price - buy_price
 
+    list_price = reformat_list_price(list_price)
+
     result = %{
-      buy_from: buy_from,
-      sell_to: sell_to,
+      buy_from: Atom.to_string(buy_from),
+      sell_to: Atom.to_string(sell_to),
       buy_price: raw_to_float_string(buy_price),
       sell_price: raw_to_float_string(sell_price),
       profit: raw_to_float_string(profit),
-      all_prices: list_price
+      all_prices: list_price,
+      pair: symbol,
+      base: String.upcase(base),
+      asset: String.upcase(asset)
     }
 
     if profit > 0 do
@@ -102,6 +109,21 @@ defmodule Monitrage.Scanner do
     else
       {:loss, result}
     end
+  end
+
+  def reformat_list_price(list_price) do
+    Enum.reduce(list_price, %{}, fn {k,v}, acc -> 
+
+      [bid_price, bid_vol] = v.higest_bid
+      [ask_price, ask_vol] = v.lowest_ask
+
+      content = %{"bid_price" => bid_price,
+                  "bid_vol" => bid_vol,
+                  "ask_price" => ask_price,
+                  "ask_vol" => ask_vol
+                  }
+
+      Map.put(acc, Atom.to_string(k), content) end)
   end
 
   @doc """
