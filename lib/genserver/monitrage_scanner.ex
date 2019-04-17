@@ -107,7 +107,7 @@ defmodule Monitrage.Scanner do
       gain: Float.to_string(gain),
       base: String.upcase(base),
       asset: String.upcase(asset),
-      time: :os.system_time(:millisecond)
+      time: :os.system_time(:second)
     }
 
     if profit > 0 do
