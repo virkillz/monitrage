@@ -96,6 +96,8 @@ defmodule Monitrage.Scanner do
 
     result = %{
       buy_from: Atom.to_string(buy_from),
+      buy_link: Monitrage.get_link(buy_from, symbol), 
+      sell_link: Monitrage.get_link(sell_to, symbol),       
       sell_to: Atom.to_string(sell_to),
       buy_price: raw_to_float_string(buy_price),
       sell_price: raw_to_float_string(sell_price),
