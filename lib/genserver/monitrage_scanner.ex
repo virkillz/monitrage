@@ -260,6 +260,10 @@ defmodule Monitrage.Scanner do
     :erlang.float_to_binary(raw / 1.0e8, [{:decimals, 8}])
   end
 
+  defp parse_price() do
+    "0.0"
+  end  
+
   defp parse_price(nil) do
     "0.0"
   end  
