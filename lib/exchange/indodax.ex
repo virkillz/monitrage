@@ -47,11 +47,15 @@ defmodule Monitrage.Indodax do
   def best_offer(symbol) do
     case depth(symbol |> decode_symbol) do
       {:ok, %{"sell" => asks, "buy" => bids}} ->
-        higest_bid = List.first(bids)
-        lowest_ask = List.first(asks)
-        %{higest_bid: higest_bid, lowest_ask: lowest_ask}
+      if bids != nil or asks != nil do
+          higest_bid = List.first(bids)
+          lowest_ask = List.first(asks)
+          %{higest_bid: higest_bid, lowest_ask: lowest_ask}
+      else
+        %{higest_bid: 0, lowest_ask: nil}
+      end
 
-      err -> %{higest_bid: 0, lowest_ask: nil}
+      _err -> %{higest_bid: 0, lowest_ask: nil}
     end
   end
 end

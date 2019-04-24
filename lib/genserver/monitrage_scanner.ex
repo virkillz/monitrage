@@ -75,6 +75,8 @@ defmodule Monitrage.Scanner do
   def analyze_best_prices(symbol) do
     list_price = fetch_best_prices(symbol)
 
+    # IO.inspect("BIANG KEROK KAYAKNYA")
+    # IO.inspect(list_price)
     [asset, base] = String.split(symbol, "_")
 
     highest_bid =
@@ -90,7 +92,13 @@ defmodule Monitrage.Scanner do
 
     profit = sell_price - buy_price
 
-    gain = Float.round((profit/buy_price) * 100)
+    # IO.inspect("HITUNG GAIN profit #{profit} dan buy price #{buy_price}")
+    gain =
+      if profit > 0 do 
+        Float.round((profit/buy_price) * 100)
+      else
+        0.0
+      end
 
     list_price = reformat_list_price(list_price)
 
@@ -206,8 +214,15 @@ defmodule Monitrage.Scanner do
   #   Enum.count(list, fn x -> x == symbol end)
   # end
 
-  defp float_string_to_raw(string) do
-    string
+  defp float_string_to_raw(nil) do
+    0
+  end
+
+
+  defp float_string_to_raw(list) do
+    # IO.inspect("MOSOK SIH BUKAN LIST")
+    # IO.inspect(string)
+    list
     |> parse_price
     |> float_parse
     |> rawize
@@ -245,15 +260,17 @@ defmodule Monitrage.Scanner do
     :erlang.float_to_binary(raw / 1.0e8, [{:decimals, 8}])
   end
 
+  defp parse_price(nil) do
+    "0.0"
+  end  
+
   defp parse_price([price, _qty]) do
     price
   end
 
-  defp parse_price(nil) do
-    0
-  end  
-
   defp float_parse(string) do
+      # IO.inspect("COBA SINI DULU")
+      # IO.inspect(string)
     {float, _} = Float.parse(string)
     float
   end

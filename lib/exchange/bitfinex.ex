@@ -65,6 +65,7 @@ defmodule Monitrage.Bitfinex do
   def best_offer(symbol) do
     case depth(symbol |> decode_symbol) do
       {:ok, %{"asks" => asks, "bids" => bids}} ->
+      if bids != nil or asks != nil do
         higest_bid = List.first(bids)
         lowest_ask = List.first(asks)
 
@@ -72,8 +73,12 @@ defmodule Monitrage.Bitfinex do
           higest_bid: [higest_bid["price"], higest_bid["amount"]],
           lowest_ask: [lowest_ask["price"], lowest_ask["amount"]]
         }
+      else
+        %{higest_bid: 0, lowest_ask: nil}
+      end        
 
-      err -> %{higest_bid: 0, lowest_ask: nil}
+
+      _err -> %{higest_bid: 0, lowest_ask: nil}
     end
   end
 end
