@@ -7,7 +7,7 @@ defmodule Monitrage do
 
   """
 
-  @blacklisted_pair ["hot_btc", "hot_eth", "dat_eth"]
+  @blacklisted_pair ["hot_btc", "hot_eth", "dat_eth", "dat_btc"]
 
 
   @supported_exchange [

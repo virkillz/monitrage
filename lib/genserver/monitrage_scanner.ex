@@ -249,6 +249,10 @@ defmodule Monitrage.Scanner do
     price
   end
 
+  defp parse_price(nil) do
+    0
+  end  
+
   defp float_parse(string) do
     {float, _} = Float.parse(string)
     float
