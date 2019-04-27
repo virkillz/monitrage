@@ -39,8 +39,14 @@ defmodule Monitrage.Indodax do
 
   def depth(symbol) do
     case HTTPoison.get(@domain <> "/api/#{symbol}/depth") do
-      {:ok, %{body: body, status_code: 200}} -> Jason.decode(body)
-      err -> {:error, "Cannot get depth"}
+      {:ok, %{body: body, status_code: 200}} -> 
+        hasil = Jason.decode(body)
+            case hasil do
+              {:ok, %{"buy" => _buy}} -> hasil
+              {:ok, %{"error_description" => error}} -> {:error, error}
+              _other -> {:error, "Cannot get depth"}
+            end
+      _err -> {:error, "Cannot get depth"}
     end
   end
 

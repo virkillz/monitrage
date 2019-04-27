@@ -74,6 +74,45 @@ defmodule Monitrage do
     |> Enum.into(%{})
   end
 
+
+  # def get_order_book(coin) when is_binary(coin) do
+  # pair =
+  #   if coin == "btc" do
+  #     "btc_usdt"
+  #   else
+  #     coin <> "_btc"
+  #   end
+  # @supported_exchange
+  #   |> Keyword.keys()
+  #   |> Enum.map(
+  #     &{&1, Task.async(fn -> apply(@supported_exchange[&1], :depth, [(apply(@supported_exchange[&1], :decode_symbol, [pair]))]) end)}
+  #   )
+  #   |> Enum.map(fn {k, v} -> {k, Task.await(v)} end)
+  #   |> Enum.filter(fn {k,v} -> match?({:ok, _}, v) end)
+  #   |> Enum.into(%{})
+  # end
+
+  def get_order_book(pair) when is_binary(pair) do
+  # pair =
+  #   if coin == "btc" do
+  #     "btc_usdt"
+  #   else
+  #     coin <> "_btc"
+  #   end
+  @supported_exchange
+    |> Keyword.keys()
+    |> Enum.map(
+      &{&1, Task.async(fn -> apply(@supported_exchange[&1], :best_offer, [pair]) end)}
+    )
+    |> Enum.map(fn {k, v} -> {k, Task.await(v)} end)
+    |> Enum.filter(fn {k,v} -> not match?(%{higest_bid: 0, lowest_ask: nil}, v) end)  
+    |> Enum.into(%{})
+  end  
+
+  def get_order_book(coin) do
+    {:error, "invalid coin"}
+  end  
+
   # ==================== implementation ===================
 
   # combine all available pairs
