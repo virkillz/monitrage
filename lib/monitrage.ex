@@ -92,13 +92,24 @@ defmodule Monitrage do
   #   |> Enum.into(%{})
   # end
 
+  def get_order_book(exchange, pair) when is_atom(exchange) do
+
+    with true <- Keyword.has_key?(@supported_exchange, exchange),
+         true <- String.contains?(pair, "_"),
+         %{higest_bid: higest_bid, lowest_ask: lowest_ask} <- apply(Keyword.get(@supported_exchange, exchange), :best_offer, [pair])
+    do
+        if higest_bid == 0 or lowest_ask == nil do
+          {:error, "Pair not supported or failed to fetch"}
+        else
+          {:ok, %{higest_bid: higest_bid, lowest_ask: lowest_ask, exchange: Atom.to_string(exchange), pair: pair}}
+        end
+    else
+      _error -> {:error, "Exchange not supported or wrong pair format"}
+    end
+
+  end  
+
   def get_order_book(pair) when is_binary(pair) do
-  # pair =
-  #   if coin == "btc" do
-  #     "btc_usdt"
-  #   else
-  #     coin <> "_btc"
-  #   end
   @supported_exchange
     |> Keyword.keys()
     |> Enum.map(
@@ -109,8 +120,8 @@ defmodule Monitrage do
     |> Enum.into(%{})
   end  
 
-  def get_order_book(coin) do
-    {:error, "invalid coin"}
+  def get_order_book(pair) do
+    {:error, "invalid pair"}
   end  
 
   # ==================== implementation ===================
